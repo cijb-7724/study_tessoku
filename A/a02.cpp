@@ -167,9 +167,12 @@ struct UnionFind {//頂点数N, クエリ数Q -> O(Q log N)
 */
 //cerr
 int main() {
-    int n;
-    cin >> n;
-    cout << n*n << el;
+    int n, x;
+    cin >> n >> x;
+    vi a(n);
+    rep(i, n) cin >> a[i];
+    sort(a.begin(), a.end());
+    yesno(binary_search(a.begin(), a.end(), x));
 }
 
 /*

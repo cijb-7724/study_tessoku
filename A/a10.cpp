@@ -129,6 +129,30 @@ void put_vi(vi v) {
 //cerr
 
 signed main() {
+    int n;
+    cin >> n;
+    vi a(n);
+    rep(i, n) cin >> a[i];
+    vi max_left(n, 0);
+    vi max_right(n, 0);
+    //left
+    max_left[0] = a[0];
+    rep(i, n-1) {
+        max_left[i+1] = max(max_left[i], a[i+1]);
+    }
+    //right
+    max_right[n-1] = a[n-1];
+    rep(i, n-1) {
+        max_right[n-1-1-i] = max(max_right[n-1-i], a[n-1-1-i]);
+    }
+    int d;
+    cin >> d;
+    rep(i, d) {
+        int l, r;
+        cin >> l >> r, --l, --r;
+        cout << max(max_left[l-1], max_right[r+1]) << el;
+    }
+
 }
 // signed main() {
 //     int a, b, c, d, e, f, x, y;

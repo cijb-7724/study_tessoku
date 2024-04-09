@@ -129,6 +129,14 @@ void put_vi(vi v) {
 //cerr
 
 signed main() {
+    int n, x;
+    cin >> n >> x;
+    vi a(n);
+    rep(i, n) cin >> a[i];
+    sort(a.begin(), a.end());
+    auto itr = lower_bound(a.begin(), a.end(), x);
+    int k = distance(a.begin(), itr);
+    cout << k+1 << el;
 }
 // signed main() {
 //     int a, b, c, d, e, f, x, y;

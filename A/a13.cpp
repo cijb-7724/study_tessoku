@@ -159,15 +159,22 @@ signed main() {
     vi a(n);
     rep(i, n) cin >> a[i];
 
-    int ans = 0;
-    rep(i, n) {
-        int l = a[i];
-        int r = a[i] + k;
-        auto itr_l = lower_bound(a.begin(), a.end(), l);
-        auto itr_r = upper_bound(a.begin(), a.end(), r);
-        --itr_r;
-        ans += distance(itr_l, itr_r);
+    vi r(n-1, 0);
+
+    //しゃくとり法
+    rep(i, n-1) {
+        if (i == 0) r[i] = 0;
+        else r[i] = r[i-1];
+
+        while(r[i] < n-1 && a[r[i]+1]-a[i] <= k) {
+            ++r[i];
+        }
+        // cout << "r " << i << ' ';
+        // cout << r[i] << ' ' << r[i] - i << el;
     }
+
+    int ans = 0;
+    rep(i, n-1) ans += r[i] - (i);
     cout << ans << el;
 }
 

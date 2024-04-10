@@ -1,6 +1,4 @@
 /*
-cd documents/program/cpp/competition
-g++ -o out atcoder.cpp && out
 https://atcoder.jp/contests/abc305/tasks/abc305_a
 */
 
@@ -10,6 +8,7 @@ https://atcoder.jp/contests/abc305/tasks/abc305_a
 #include <algorithm>
 #include <set>
 #include <tuple>
+#include <map>
 #include <math.h>
 #include <string>
 #include <cstdlib>
@@ -19,6 +18,8 @@ https://atcoder.jp/contests/abc305/tasks/abc305_a
 #include <deque> // deque
 #include <sstream> //基数変換
 #include <bitset> //2進数に変換
+#include <iterator> // set intersection
+#include <numeric> // accumulate
 
 
 using namespace std;
@@ -79,7 +80,7 @@ using GraphIn = vector<vector<int>>;//charGridの探索
 using GridPos = pair<int, int>;//グリッド上の位置・座標
 
 //関数定義群
-vector<pair<long long, long long> > prime_factorize(long long); //素因数分解
+vector<pair<int, int> > prime_factorize(int); //素因数分解
 bool contain_string(string, string); //部分文字列の一致判定
 int gcd(int, int); //最大公約数
 int lcm(int, int); //最小公倍数
@@ -91,87 +92,48 @@ int modInv(int, int);
 bool isPrime(int);
 
 
-
-
-//Union Find
-struct UnionFind {//頂点数N, クエリ数Q -> O(Q log N)
-    vi p; //自分の親を管理
-    vi r;
-    UnionFind(int n) { //コンストラクタ インスタンス生成時に初期化
-        p.resize(n);
-        rep(i, n) {
-            p[i] = i;
+void put_vvc(bool bl, GraphCh &g) {
+    if (!bl) return ;
+    int h = g.size(), w = g[0].size();
+    rep(i, h) {
+        rep(j, w) {
+            cout << g[i][j];
         }
-        r.resize(n, 1);
+        cout << el;
     }
-    int find(int x) { // 均し計算量O(log N)
-        if (p[x] == x) return x;
-        else return p[x] = find(p[x]);//パス圧縮　自分の親を代表元に張りなおす
-    }
-    void unite(int x, int y) {
-        x = find(x);
-        y = find(y);
-        if (x == y) return;
-        if (r[x] > r[y]) {// Union by rank
-            swap(x, y);
+}
+
+void put_vvi(bool bl, vvi &need) {
+    if (!bl) return ;
+    rep(i, 10) cout << "=";
+    cout << el;
+    int h = need.size(), w = need[0].size();
+    rep(i, h) {
+        rep(j, w) {
+            cout << need[i][j] << ' ';
         }
-        if (r[x] == r[y]) {
-            ++r[y];
-        }
-        p[x] = y;
+        cout << el;
     }
-};
+    rep(i, 10) cout << "=";
+    cout << el;
+}
+
+void put_vi(vi v) {
+    for (auto x: v) {
+        cout << x << ' ';
+    }
+    cout << el;
+}
 
 
-
-
-// vb seen;
-// void dfs (const Graph &G, int v) {
-//     seen[v] = true;
-//     //cout << "v = " << v+1 << el;
-//     for (auto nextv : G[v]) {
-//         if (seen[nextv] == true) {
-//             continue;
-//         }
-//         dfs(G, nextv);
-//     }
-// }
-
-// vi dist;
-// int bfs (const Graph &G, int v) {
-//     queue<int> que;
-//     dist[v] = 0;
-//     que.push(v);
-//     while(!que.empty()) {
-//         v = que.front();
-//         que.pop();
-//         // cout << "v = " << v+1 << el;
-//         for(int nv: G[v]) {
-//             if (dist[nv] == -1) {
-//                 dist[nv] = dist[v] + 1;
-//                 que.push(nv);
-//             } else {
-//                 //tuiki
-//                 continue;
-//             }
-//         }
-//     }
-//     return 0;
-// }
-
-/*
------
----------------
--------------------------
----------------
------
-*/
 //cerr
+
 signed main() {
     int n;
     cin >> n;
-    int w = 1500;
-    vvi rui(w+2, vi(w+2, 0));
+    int mx = 1500;
+    vvi rui(mx+1, vi(mx+1, 0));
+
     rep(i, n) {
         int a, b, c, d;
         cin >> a >> b >> c >> d;
@@ -182,35 +144,41 @@ signed main() {
         --rui[c+1][b];
     }
 
-    //yoko
-    rep(i, w+1) rep(j, w+1) {
-        rui[i+1][j+1] += rui[i+1][j];
+    rep(i, mx+1) {
+        rep(j, mx) {
+            rui[i][j+1] +=  rui[i][j];
+        }
     }
-
-    //tate
-    rep(i, w+1) rep(j, w+1) {
-        rui[i+1][j+1] += rui[i][j+1];
+    
+    rep(j, mx+1) {
+        rep(i, mx) {
+            rui[i+1][j] += rui[i][j];
+        }
     }
-
-    // rep(i, 10) {
-    //     rep(j, 10) {
-    //         cout << rui[i][j] << ' ';
-    //     }
-    //     cout << el;
-    // }
 
     int ans = 0;
-    rep(i, w+1) rep(j, w+1) {
-        if (rui[i+1][j+1]) ++ans;
+    rep(i, mx) {
+        rep(j, mx) {
+            if (rui[i][j]) ++ans;
+        }
     }
     cout << ans << el;
 }
+// signed main() {
+//     int a, b, c, d, e, f, x, y;
+//     string s, t;
+//     int n, m, k;
+//     vi va, vb, vc, vd, vx, vy;
+//     // cin >>
+// }
+
+
+
 
 /*
 
+
 */
-
-
 
 
 
@@ -340,3 +308,77 @@ bool isPrime(int n) {
     for (int i=2; i<=sqrt(n); ++i) if (n % i == 0) return false;
     return true;
 }
+
+/*
+-----
+---------------
+-------------------------
+---------------
+-----
+*/
+
+//Union Find
+// struct UnionFind {//頂点数N, クエリ数Q -> O(Q log N)
+//     vi p; //自分の親を管理
+//     vi r;
+//     UnionFind(int n) { //コンストラクタ インスタンス生成時に初期化
+//         p.resize(n);
+//         rep(i, n) {
+//             p[i] = i;
+//         }
+//         r.resize(n, 1);
+//     }
+//     int find(int x) { // 均し計算量O(log N)
+//         if (p[x] == x) return x;
+//         else return p[x] = find(p[x]);//パス圧縮　自分の親を代表元に張りなおす
+//     }
+//     void unite(int x, int y) {
+//         x = find(x);
+//         y = find(y);
+//         if (x == y) return;
+//         if (r[x] > r[y]) {// Union by rank
+//             swap(x, y);
+//         }
+//         if (r[x] == r[y]) {
+//             ++r[y];
+//         }
+//         p[x] = y;
+//     }
+// };
+
+
+
+
+// vb seen;
+// void dfs (const Graph &G, int v) {
+//     seen[v] = true;
+//     //cout << "v = " << v+1 << el;
+//     for (auto nextv : G[v]) {
+//         if (seen[nextv] == true) {
+//             continue;
+//         }
+//         dfs(G, nextv);
+//     }
+// }
+
+// vi dist;
+// int bfs (const Graph &G, int v) {
+//     queue<int> que;
+//     dist[v] = 0;
+//     que.push(v);
+//     while(!que.empty()) {
+//         v = que.front();
+//         que.pop();
+//         // cout << "v = " << v+1 << el;
+//         for(int nv: G[v]) {
+//             if (dist[nv] == -1) {
+//                 dist[nv] = dist[v] + 1;
+//                 que.push(nv);
+//             } else {
+//                 //tuiki
+//                 continue;
+//             }
+//         }
+//     }
+//     return 0;
+// }

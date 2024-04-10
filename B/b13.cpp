@@ -153,7 +153,7 @@ signed main() {
     }
 
     int ans = 0;
-    rep(i, n-1) ans += r[i] - i;
+    rep(i, n-1) if (r[i] - i > 0) ans += r[i] - i;
     rep(i, n) if (a[i] <= k) ++ans;
     cout << ans << el;
 }
@@ -162,7 +162,10 @@ signed main() {
 
 
 /*
+9 102
+292 467 21 437 206 200 108 110 329
 
+1
 
 */
 

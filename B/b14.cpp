@@ -145,27 +145,46 @@ signed main() {
         }
     }
 
-    sort(ax.begin(), ax.end());
-    sort(ay.begin(), ay.end());
-
     // cout << x << el;
     // put_vi(ax);
     // cout << y << el;
     // put_vi(ay);
 
+    vi bin_ax, bin_ay;
+
     for(int bit=0; bit < (1<<x); ++bit) {
-        int sumx = 0;
+        int sum = 0;
         for (int i=0; i<x; ++i) {
             if (bit & (1<<i)) {
-                sumx += ax[i];
+                sum += ax[i];
             }
         }
-        if (sumx == 0) continue;//選ばないのはダメ
-        if (binary_search(ay.begin(), ay.end(), k-sumx)) {
+        bin_ax.push_back(sum);
+    }
+
+    for(int bit=0; bit < (1<<y); ++bit) {
+        int sum = 0;
+        for (int i=0; i<y; ++i) {
+            if (bit & (1<<i)) {
+                sum += ay[i];
+            }
+        }
+        bin_ay.push_back(sum);
+    }
+
+    // put_vi(bin_ax);
+    // put_vi(bin_ay);
+
+    sort(bin_ax.begin(), bin_ax.end());
+    sort(bin_ay.begin(), bin_ay.end());
+
+    for (auto z: bin_ax) {
+        if (binary_search(bin_ay.begin(), bin_ay.end(), k - z)) {
             cout << yes << el;
             return 0;
         }
     }
+
     cout << no << el;
 }
 

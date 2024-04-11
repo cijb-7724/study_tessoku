@@ -141,7 +141,7 @@ signed main() {
     //しゃくとり法
     rep(i, n-1) {
         if (i == 0) r[i] = 0;
-        else r[i] = r[i-1];
+        else r[i] = max(r[i-1], i);
         //while(rの範囲 && 本体の条件)
         while(r[i] < n-1 && rui[r[i]+1 + 1]-rui[i] <= k) {
             ++r[i];

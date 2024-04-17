@@ -128,11 +128,26 @@ void put_vi(vi v) {
 
 
 signed main() {
-    int n;
-    vi a(n), b(n);
-    rep(i, n-1) cin >> a[i];
-    rep(i, n-2) cin >> b[i];
+    bool output = false;
+    // output = true;
+    
+	int n;
+	cin >> n;
+	vi a(n, 0), b(n, 0);
+	rep(i, n-1) cin >> a[i];
+	rep(i, n-2) cin >> b[i];
+	
+	vi dp(n, 0);
+	dp[1] = a[0];
+	repp(i, 2, n) {
+		dp[i] = min(
+			dp[i-1] + a[i-1],
+			dp[i-2] + b[i-2]
+		);
+	}
+	cout << dp[n-1] << el;
 }
+
 
 
 

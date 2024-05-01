@@ -128,16 +128,33 @@ void put_vi(vi v) {
 
 
 signed main() {
-    int n, a, b;
-    cin >> n >> a >> b;
     string f = "First", s = "Second";
-    
+    int n, k;
+    cin >> n >> k;
+    vi a(k);
+    rep(i, k) cin >> a[i];
+
+    vb dp(n+1);
+    rep(i, n+1) {
+        bool done = false;
+        rep(j, k) {
+            if (i >= a[j] && dp[i-a[j]] == false) {
+                dp[i] = true;
+                done = true;
+            }
+        }
+        if (!done) dp[i] = false;
+    }
+    if (dp[n]) cout << f << el;
+    else cout << s << el;
 }
 
 
 
 
 /*
+
+
 
 */
 

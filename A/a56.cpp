@@ -126,23 +126,60 @@ void put_vi(vi v) {
 }
 
 
+int calc_hash(vi &bpow, vi &hash, int l, int r, int mod) {
+    int val = (hash[r] - bpow[r-l+1]*hash[l-1]) % mod;
+    if (val < 0) val += mod;
+    return val;
+}
 
 signed main() {
     int n, q;
     cin >> n >> q;
     string s;
     cin >> s;
+    
+    // int mod = powll(2, 61)-1;//dame
+    // int mod = 4294967231;//dame
+    // int b = 100;
+    
+    int mod = 2147483647;
+    int b = 100;
+    
+
+    vi bpow(n+1, 1);
+    rep(i, n) bpow[i+1] = bpow[i] * b % mod;
+
+    vi t(n);
+    rep(i, n) t[i] = s[i] - 'a' + 1;
+
+    vi hash(n+1, 0);
+    rep(i, n) hash[i+1] = (b * hash[i] + t[i]) % mod;
+
     rep(i, q) {
         int a, b, c, d;
         cin >> a >> b >> c >> d;
+        int h1 = calc_hash(bpow, hash, a, b, mod);
+        int h2 = calc_hash(bpow, hash, c, d, mod);
+        // cout << h1 << ' ' << h2 << el;
+        yesno(h1 == h2);
     }
+
+
 }
 
 
 
 
 /*
+h1 = s[1,1] = B0 * s1
+h2 = s[1,2] = B1 * s1 + B0 * s2
+h3 = s[1,3] = B2 * s1 + B1 * s2 + B0 * s3
 
+s[1,i] = s[1,i-1] + t[i] より
+hi = B * h_i-1 + ti
+
+s[l,r] = h_r - B^(r-(l-1)) * h_l-1
+s[l,r] = s[1,r] - s[]
 
 
 */

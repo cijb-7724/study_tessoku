@@ -133,12 +133,7 @@ signed main() {
     vi a(n), c(m);
     rep(i, n) cin >> a[i];
     rep(j, m) cin >> c[j];
-
-    int ans = 0;
-    rep(i, n) ans += a[i] * m;
-    rep(j, m) ans += c[j] * n;
-    ans += b * n * m;
-    cout << ans << el;
+    cout << reduce(a.begin(), a.end()) * m + reduce(c.begin(), c.end()) * n + b*n*m << el;
 }
 
 

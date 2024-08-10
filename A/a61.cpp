@@ -127,80 +127,13 @@ void put_vi(vi v) {
 
 
 
-
-class SegmentTree {
-    public:
-    vi data;
-    int siz = 1;
-
-    void init(int n) {
-        siz = 1;
-        while (siz < n) siz *= 2;
-        data.assign(siz*2, -1);//
-    }
-    //1 point
-    void update(int pos, int x) {
-        pos = pos + siz - 1;
-        data[pos] = x;
-        while (pos >= 2) {
-            pos /= 2;
-            data[pos] = max(data[pos * 2], data[pos * 2 + 1]);//
-        }
-    }
-    //range
-    int aggregate(int l, int r, int a, int b, int u) {
-        if (r <= a || b <= l) return -1;//
-        if (l <= a && b <= r) return data[u];
-        int m = (a + b) / 2;
-        int ans_l = aggregate(l, r, a, m, u * 2);
-        int ans_r = aggregate(l, r, m, b, u * 2 + 1);
-        return max(ans_l, ans_r);//
-    }
-};
-
 signed main() {
-    int n;
-    cin >> n;
-    vi a(n);
-    rep(i, n) cin >> a[i];
-
-    vi b = a;
-    sort(b.begin(), b.end());
-    vi c(n);
-    rep(i, n) c[i] = distance(b.begin(), lower_bound(b.begin(), b.end(), a[i]))+1;
-    // rep(i, n) cout << c[i] << ' ';
-    // cout << el;
-
-    SegmentTree z;
-    z.init(n);
-
-    int ans =  0;
-    rep(i, n) {
-        // rep(j, n) cout << z.data[j+z.siz] << ' ';
-        // cout << el;
-        ans = z.aggregate(c[i]+1, n+1, 1, z.siz+1, 1);//過去に登場した自分よりも大きいもののフラグの数をカウント
-        if (ans != -1) ++ans;
-        cout << ans << el;
-        // cout << "I = " << i << ' ';
-        // cout << ans << el;
-        z.update(c[i], i);//既に登場した数字に1フラグ
-    }
 }
 
 
 
 
 /*
-RMQ
-Range Maximum Query
-
-
-7
-3 6 4 5 7 1 2
-(1)3 6
-(2)9 4
-(3)13 5
-(4)18 7
 */
 
 

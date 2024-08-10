@@ -123,15 +123,6 @@ S mapping(F f, S x) {return f+x;}
 F composition(F f, F g) {return f+g;}
 F id() {return INFL;}
 
-vi seen;
-void dfs (const Graph &G, int v) {
-    seen[v] = 1;
-    for (auto nextv : G[v]) {
-        if (seen[nextv] == true) continue;
-        dfs(G, nextv);
-    }
-}
-
 signed main() {
     int n, m;
     cin >> n >> m;
@@ -142,12 +133,15 @@ signed main() {
         g[a].push_back(b);
         g[b].push_back(a);
     }
-    seen.assign(n, 0);
-    dfs(g, 0);
-    if (reduce(seen.begin(), seen.end()) == n) {
-        cout << "The graph is connected." << el;
-    } else {
-        cout << "The graph is not connected." << el;
+    rep(i, n) {
+        cout << i+1 << ": {";
+        if (g[i].size() != 0) {
+            cout << g[i][0]+1;
+            repp(j, 1, g[i].size()) {
+                cout << ", " << g[i][j]+1;
+            }
+        }
+        cout << "}" << el;
     }
 }
 

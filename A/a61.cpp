@@ -125,6 +125,25 @@ F id() {return INFL;}
 
 
 signed main() {
+    int n, m;
+    cin >> n >> m;
+    Graph g(n);
+    rep(i, m) {
+        int a, b;
+        cin >> a >> b, --a, --b;
+        g[a].push_back(b);
+        g[b].push_back(a);
+    }
+    rep(i, n) {
+        cout << i+1 << ": {";
+        if (g[i].size() != 0) {
+            cout << g[i][0]+1;
+            repp(j, 1, g[i].size()) {
+                cout << ", " << g[i][j]+1;
+            }
+        }
+        cout << "}" << el;
+    }
 }
 
 

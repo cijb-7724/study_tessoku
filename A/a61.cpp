@@ -20,16 +20,17 @@ https://atcoder.jp/contests/abc305/tasks/abc305_a
 #include <bitset> //2進数に変換
 #include <iterator> // set intersection
 #include <numeric> // accumulate
-
+#include <atcoder/all>
 
 using namespace std;
+using namespace atcoder;
 
-#define pi 3.14159265358979323846
-#define yes "Yes"
-#define no "No"
+double pi = 3.14159265358979323846;
+string yes = "Yes";
+string no = "No";
+string alphabet = "abcdefghijklmnopqrstuvwxyz";
+string Alpahbet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 #define yesno(bool) if(bool){cout<<"Yes"<<endl;}else{cout<<"No"<<endl;}
-#define alphabet "abcdefghijklmnopqrstuvwxyz"
-#define Alpahbet "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #define rep(i, n) for (int i = 0; i < (int)(n); i++)
 #define repp(i, l, r) for (int i = l; i < r; ++i)
 #define rrep(i, r, l) for (int i = r; i >= l; --i)
@@ -37,23 +38,18 @@ using namespace std;
 #define el '\n'
 #define int long long
 
-
-// int imax = 2147483647;
-// int imin = -2147483648;
-// unsigned int uimax = 4294967296LL;
-// long long llmax = 9223372036854775807LL;
-// long long llmin = -9223372036854775808LL;
-// unsigned long long ullmax = 18446744073709551616uLL;
-
-
+int INF = 1001001001;
+int INFL = 4004004003094073385LL;
+// int INFL = 1001001001;
+int llzero = (int)(0);
 
 const int dx[4] = {1, 0, -1, 0};//グリッド上の探索
 const int dy[4] = {0, 1, 0, -1};//上下左右移動方向
 const int dxdi[4] = {1, 1, -1, -1};//グリッド上の探索
 const int dydi[4] = {1, -1, 1, -1};//斜め移動方向
 
-
 //型エイリアス vector<set<pair<tuple : bool<char<string<int<ll<ull
+using ld = long double;
 using vb = vector<bool>;
 using vc = vector<char>;
 using vs = vector<string>;
@@ -66,20 +62,27 @@ using vvb = vector<vector<bool>>;
 using vvc = vector<vector<char>>;
 using vvs = vector<vector<string>>;
 using vvi = vector<vector<int>>;
+using vvvi = vector<vector<vector<int>>>;
+using vvvvi = vector<vector<vector<vector<int>>>>;
 using vsi = vector<set<int>>;
 using vpii = vector<pair<int, int>>;
 using spii = set<pair<int, int>>;
-
 using stst = stringstream;
 
 // [ノード][(接続ノード, 重み)]
 using Graph = vector<vector<int>>;//重みなしグラフ構造
 using GraphWeight = vector<vector<pair<int,int>>>;//重みありグラフ構造
+using EdgeWeight = vector<pair<int, pii>>;//kruskal
 using GraphCh = vector<vector<char>>;//charGridの探索
 using GraphIn = vector<vector<int>>;//charGridの探索
 using GridPos = pair<int, int>;//グリッド上の位置・座標
 
 //関数定義群
+void put_vvc(GraphCh &, bool=false);
+void put_vs(vs &, bool=false);
+void put_vvi(vvi &, bool=false);
+void put_vi(vi, bool=false);
+void put_vpii(vpii, bool=false);
 vector<pair<int, int> > prime_factorize(int); //素因数分解
 bool contain_string(string, string); //部分文字列の一致判定
 int gcd(int, int); //最大公約数
@@ -90,53 +93,43 @@ bool in_table(int, int, int, int); //添え字が２次元配列内か判定
 int modPow(int, int, int);
 int modInv(int, int);
 bool isPrime(int);
+int intersect(int, int, int, int);
+int floor_sqrt(int);
+bool isSquare(int);
+int popcount(int);
+bool isPalindrome(string);
+int string_to_int(string);
+void chmax(int &, int);
+void chmin(int &, int);
 
+//cerr
+using mint = modint998244353;
+/*
+using mint = modint998244353;
+mint a;
+a.mod()
+a.val()
+--a;
+++a;
+a.pow(n)// = a^n
+a.inv()
+*/
 
-void put_vvc(bool bl, GraphCh &g) {
-    if (!bl) return ;
-    int h = g.size(), w = g[0].size();
-    rep(i, h) {
-        rep(j, w) {
-            cout << g[i][j];
-        }
-        cout << el;
-    }
-}
-
-void put_vvi(bool bl, vvi &need) {
-    if (!bl) return ;
-    rep(i, 10) cout << "=";
-    cout << el;
-    int h = need.size(), w = need[0].size();
-    rep(i, h) {
-        rep(j, w) {
-            cout << need[i][j] << ' ';
-        }
-        cout << el;
-    }
-    rep(i, 10) cout << "=";
-    cout << el;
-}
-
-void put_vi(vi v) {
-    for (auto x: v) {
-        cout << x << ' ';
-    }
-    cout << el;
-}
-
+using S = int;
+using F = int;
+S op(S a, S b) {return a+b;}
+S e() {return INFL;}
+S mapping(F f, S x) {return f+x;}
+F composition(F f, F g) {return f+g;}
+F id() {return INFL;}
 
 
 signed main() {
 }
 
 
-
 /*
-//graph
 */
-
-
 
 
 
@@ -151,7 +144,88 @@ signed main() {
 
 //関数群---------------------------------------------------
 
- 
+void put_vvc(GraphCh &g, bool bl) {
+    int h = g.size(), w = g[0].size();
+    if (bl) {
+        rep(i, 10) cout << "=";
+        cout << el;
+    }
+    rep(i, h) {
+        rep(j, w) {
+            cout << g[i][j];
+        }
+        cout << el;
+    }
+    if (bl) {
+        rep(i, 10) cout << "=";
+        cout << el;
+    }
+}
+
+void put_vs(vs &g, bool bl) {
+    int h = g.size(), w = g[0].size();
+    if (bl) {
+        rep(i, 10) cout << "=";
+        cout << el;
+    }
+    rep(i, h) {
+        cout << g[i];
+        cout << el;
+    }
+    if (bl) {
+        rep(i, 10) cout << "=";
+        cout << el;
+    }
+}
+
+
+void put_vvi(vvi &vec, bool bl) {
+    int h = vec.size();
+    if (bl) {
+        rep(i, 10) cout << "=";
+        cout << el;
+    }
+    rep(i, h) {
+        rep(j, vec[i].size()) {
+            cout << vec[i][j] << ' ';
+        }
+        cout << el;
+    }
+    rep(i, 10) cout << "=";
+    cout << el;
+}
+
+void put_vi(vi v, bool bl) {
+    if (bl) {
+        rep(i, 10) cout << "=";
+        cout << el;
+    }
+    for (auto x: v) {
+        cout << x << ' ';
+    }
+    cout << el;
+    if (bl) {
+        rep(i, 10) cout << "=";
+        cout << el;
+    }
+}
+void put_vpii(vpii v, bool bl) {
+    if (bl) {
+        rep(i, 10) cout << "=";
+        cout << el;
+    }
+    // for (auto x: v) {
+    //     cout << x.first << ' ' << x.second << el;
+    // }
+    for (auto x: v) cout << x.first << ' ';
+    cout << el;
+    for (auto x: v) cout << x.second << ' ';
+    cout << el;
+    if (bl) {
+        rep(i, 10) cout << "=";
+        cout << el;
+    }
+}
 // 素因数分解
 // 460 = 2^2 x 5 x 23 の場合
 // 返り値は {{2, 2}, {5, 1}, {23, 1}}
@@ -162,9 +236,7 @@ vpii prime_factorize(int N) {
     // √N まで試し割っていく
     for (int p = 2; p * p <= N; ++p) {
         // N が p で割り切れないならばスキップ
-        if (N % p != 0) {
-            continue;
-        }
+        if (N % p != 0) continue;
 
         // N の素因数 p に対する指数を求める
         int e = 0;
@@ -261,10 +333,53 @@ int modInv(int a, int mod) {
 }
 bool isPrime(int n) {
     if (n < 2) return false;
-    for (int i=2; i<=sqrt(n); ++i) if (n % i == 0) return false;
+    if (n == 2) return true;
+    for (int i=2; i<=sqrt(n)+1; ++i) if (n % i == 0) return false;
     return true;
 }
-
+int intersect(int l1, int r1, int l2, int r2) {
+    return max(l1, l2) < min(r1, r2);
+}
+int floor_sqrt(int n) {
+    int ok = 0;
+    int ng = sqrtl(n)+1;
+    while (abs(ok - ng) > 1) {
+        int mid = (ok + ng) / 2;
+        if (mid*mid<=n) ok = mid;
+        else ng = mid;
+    }
+    return ok;
+}
+bool isSquare(int n) {
+    int m = floor_sqrt(n);
+    return m * m == n;
+}
+int popcount(int a) {
+    return -1;
+    // return __popcount(uint64_t(a));
+}
+bool isPalindrome(string s) {
+    string ns = s;
+    reverse(s.begin(), s.end());
+    return s == ns;
+}
+//a->1, z->26, aa=27
+int string_to_int(string s) {
+    int base = 26;
+    int k = 1;
+    int sum = 0;
+    rep(i, s.size()) {
+        sum += k * (s[i] - 'a' + 1);
+        k *= base;
+    }
+    return sum;
+}
+void chmax(int &a, int b) {
+    a = max(a, b);
+}
+void chmin(int &a, int b) {
+    a = min(a, b);
+}
 /*
 -----
 ---------------
@@ -300,6 +415,9 @@ bool isPrime(int n) {
 //         }
 //         p[x] = y;
 //     }
+//     bool same(int x, int y) {
+//         return find(x) == find(y);
+//     }
 // };
 
 
@@ -317,7 +435,7 @@ bool isPrime(int n) {
 //     }
 // }
 
-// vi dist;
+// vi dist;//infで埋める
 // int bfs (const Graph &G, int v) {
 //     queue<int> que;
 //     dist[v] = 0;
@@ -325,16 +443,13 @@ bool isPrime(int n) {
 //     while(!que.empty()) {
 //         v = que.front();
 //         que.pop();
-//         // cout << "v = " << v+1 << el;
 //         for(int nv: G[v]) {
-//             if (dist[nv] == -1) {
+//             if (dist[nv] > dist[v] + 1) {
 //                 dist[nv] = dist[v] + 1;
 //                 que.push(nv);
-//             } else {
-//                 //tuiki
-//                 continue;
 //             }
 //         }
 //     }
 //     return 0;
 // }
+

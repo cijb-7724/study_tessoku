@@ -131,49 +131,62 @@ F composition(F f, F g) {return f+g;}
 F id() {return 0;}
 
 
-void dijkstra(GraphWeight &G, int v, vi &cost) {
-    cost[v] = 0;
-    priority_queue<pii> q;//{-cost, v}
-    q.push({-cost[v], v});
-    while(!q.empty()) {
-        int now_v = q.top().second;
-        int now_cost = -q.top().first;
-        q.pop();
-        if (cost[now_v] != -1 && cost[now_v] < now_cost) continue;
-        for (auto i: G[now_v]) {
-            int next_v = i.first, next_weight = i.second;
-            int new_cost = now_cost + next_weight;
-            if (cost[next_v] != -1 && cost[next_v] <= new_cost) continue;
-            if (cost[next_v] == -1) cost[next_v] = new_cost;
-            else if (cost[next_v] > new_cost)cost[next_v] = min(cost[next_v], new_cost);
-            //    else cost[next_v] = min(cost[next_v], new_cost);
-            
-            q.push({-cost[next_v], next_v});
-        }
-    }
-}
 
 signed main() {
-    int n, m;
-    cin >> n >> m;
-    vi a(m), b(m), c(m);
-    GraphWeight g(n);
-    rep(i, m) {
-        cin >> a[i] >> b[i] >> c[i], --a[i], --b[i];
-        g[a[i]].push_back({b[i], c[i]});
-        g[b[i]].push_back({a[i], c[i]});
-    }
-
-    vi cost_from_1(n, -1);
-    vi cost_from_n(n, -1);
-    dijkstra(g, 0, cost_from_1);
-    dijkstra(g, n-1, cost_from_n);
-
-    int ans = 0;
+    int n, k;
+    cin >> n >> k;
+    vi l(n), r(n);
     rep(i, n) {
-        if (cost_from_1[i] + cost_from_n[i] == cost_from_1[n-1]) ++ans;
+        cin >> l[i] >> r[i];
+        //時間に補正
+        r[i] += k;
     }
-    cout << ans << el;
+
+    //時刻iまでに何個出席できるかcntL[i]
+    vi cntL(200000, 0);
+    //時刻iから何個出席できるかcntR[i]
+    vi cntR(200000, 0);
+
+    //左から区間スケジューリング part1:sort
+    vpii rl(n);
+    rep(i, n) rl[i] = {r[i], l[i]};
+    sort(rl.begin(), rl.end());
+
+    //part2:貪欲法
+    int ctime1 = 0;//現在時刻
+    int num1 = 0;//現在出席した会議の個数
+    rep(i, n) {
+        if (ctime1 <= rl[i].second) {
+            ctime1 = rl[i].first;
+            num1 += 1;
+            cntL[ctime1] = num1;
+        }
+    }
+
+    //右から区間スケジューリング part1:sort
+    vpii lr(n);
+    rep(i, n) lr[i] = {l[i], r[i]};
+    sort(lr.rbegin(), lr.rend());//lの降順に注意
+
+    //part2:貪欲法
+    int ctime2 = 200000;//現在時刻
+    int num2 = 0;//現在出席した会議の個数
+    rep(i, n) {
+        if (ctime2 >= lr[i].second) {
+            ctime2 = lr[i].first;
+            num2 += 1;
+            cntR[ctime2] = num2;
+        }
+    }
+
+    //cntL, cntRを求める
+    //補正後のR[i]の値は200000を超えないことに注意
+    for (int i=1; i<200000; ++i) chmax(cntL[i], cntL[i-1]);
+    for (int i=200000-2; i>=0; --i) chmax(cntR[i], cntR[i+1]);
+
+    rep(i, n) {
+        cout << cntL[l[i]] + cntR[r[i]] + 1 << el;
+    }
 }
 
 

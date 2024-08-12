@@ -136,13 +136,12 @@ signed main() {
     int n, p;
     cin >> n >> p;
     vi a(n);
-    // msi cnt;
+
     unordered_map<int, int> cnt;
     int mod = 1000000007;
     rep(i, n) {
         cin >> a[i];
         a[i] %= mod;
-        // cnt.insert(a[i]);
         ++cnt[a[i]];
     }
 
